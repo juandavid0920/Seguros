@@ -1,0 +1,128 @@
+﻿@{
+    ViewData["Title"] = "Gestión Siniestros";
+    var usuarios = ViewBag.ListaUsuarios as List<SegurosAPI.Models.UsuariosDTO>;
+    var polizasUsuario = ViewBag.PolizasUsuario as List<SegurosAPI.Models.spCotizacion_polizasUsuarioDTO>;
+    var usuarioIdSeleccionado = ViewBag.UsuarioIdSeleccionado;
+}
+
+<h2 class="text-center text-danger">Gestión Siniestros</h2>
+
+<!-- Select de usuarios -->
+<div class="form-group">
+    <label for="usuarioSelect">Seleccionar Usuario</label>
+    <select id="usuarioSelect" class="form-control" onchange="seleccionarUsuario()">
+        <option value="">Seleccionar Usuario</option>
+
+        @{
+            foreach (var item in usuarios){
+                if (item.UsuarioId == usuarioIdSeleccionado)
+                {
+                    <option value="@item.UsuarioId" selected>@item.CorreoElectronico</option>
+                }
+                else
+                {
+                    <option value="@item.UsuarioId">@item.CorreoElectronico</option>
+                }
+            }
+        }       
+    </select>
+</div>
+
+<!-- Tabla de pólizas -->
+<div id="tablaPolizas" class="mt-4" style="@(polizasUsuario?.Count > 0 ? "display:block;" : "display:none;")">
+    <h3>Pólizas del Usuario</h3>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Seleccionar</th>
+                <th>Número de Póliza</th>
+                <th>Tipo de Póliza</th>
+                <th>Fecha de Adquisición</th>
+                <th>Costo</th>
+                <th>Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var poliza in polizasUsuario.Where(p => p.Poliza_Estado == "Activo"))
+            {
+                <tr>
+                    <td>
+                        <button class="btn btn-sm btn-primary"
+                                onclick="rellenarFormulario('@poliza.Poliza_PolizaId', '@poliza.TipoPoliza_Nombre')">
+                            Seleccionar
+                        </button>
+                    </td>
+                    <td>@poliza.Poliza_PolizaId</td>
+                    <td>@poliza.TipoPoliza_Nombre</td>
+                    <td>@poliza.FechaAdquisicion</td>
+                    <td>@poliza.Costo.ToString("C")</td>
+                    <td>@poliza.Poliza_Estado</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Formulario para gestionar siniestro -->
+<div id="formularioSiniestro" class="mt-4" style="display: none;">
+    <h3>Gestionar Siniestro</h3>
+    <form id="formSiniestro">
+        <div class="form-group">
+            <label for="polizaId">Número de Póliza</label>
+            <input type="text" id="polizaId" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <label for="tipoPoliza">Tipo de Póliza</label>
+            <input type="text" id="tipoPoliza" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <label for="fechaSiniestro">Fecha de Siniestro</label>
+            <input type="date" id="fechaSiniestro" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="detalleSiniestro">Detalle del Siniestro</label>
+            <textarea id="detalleSiniestro" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="valorReclamar">Valor a Reclamar</label>
+            <input type="number" id="valorReclamar" class="form-control" />
+        </div>
+        <button type="button" class="btn btn-primary" onclick="gestionarSiniestro()">Gestionar Siniestro</button>
+    </form>
+</div>
+
+<!-- Tabla de siniestros -->
+<div id="tablaSiniestros" class="mt-4" style="display: none;">
+    <h3>Historial de Siniestros de la Póliza</h3>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Fecha de Siniestro</th>
+                <th>Descripción</th>
+                <th>Monto Reclamo</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Se llenará dinámicamente desde JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="~/js/siniestrofunciones.js"></script>
+    <script>
+        function seleccionarUsuario() {
+            const usuarioId = document.getElementById('usuarioSelect').value;
+            window.location.href = `/Gestiones/GestionSiniestros?usuarioId_gestiona=${usuarioId}`;
+        }
+
+        function rellenarFormulario(polizaId, tipoPoliza) {
+            document.getElementById('polizaId').value = polizaId;
+            document.getElementById('tipoPoliza').value = tipoPoliza;
+            document.getElementById('formularioSiniestro').style.display = 'block';
+
+            // Llamar para cargar siniestros asociados
+            cargarSiniestrosPorPoliza(polizaId);
+        }
+    </script>
+}

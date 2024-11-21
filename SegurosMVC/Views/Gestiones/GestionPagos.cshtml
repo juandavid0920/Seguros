@@ -1,0 +1,38 @@
+﻿@{
+    ViewData["Title"] = "Gestión de Pagos";
+}
+
+<h2>Gestión de Pagos</h2>
+
+<p>Aquí puedes gestionar tus pagos.</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID de Pago</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Aquí puedes mostrar los pagos asociados al usuario -->
+        <tr>
+            <td>1</td>
+            <td>2024-11-20</td>
+            <td>$500</td>
+            <td>Pagado</td>
+        </tr>
+    </tbody>
+</table>
+
+<form method="post" action="/Pago/Realizar">
+    <div>
+        <label for="montoPago">Monto de Pago:</label>
+        <input type="number" id="montoPago" name="montoPago" required />
+    </div>
+
+    <div>
+        <button type="submit">Realizar Pago</button>
+    </div>
+</form>

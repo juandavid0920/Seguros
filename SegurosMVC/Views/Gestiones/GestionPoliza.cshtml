@@ -1,0 +1,93 @@
+﻿@{
+	ViewData["Title"] = "Gestión de Pólizas";
+	var usuario = ViewBag.usuario as SegurosAPI.Models.UsuariosDTO; // Obtener el usuario de la sesión
+	var tipoPolizas = ViewBag.TipoPolizas as List<SegurosAPI.Models.TipoPolizasDTO>;
+	var fechaHoy = DateTime.Now.ToString("yyyy-MM-dd"); // Fecha actual
+	var cotizaciones_usuario = ViewBag.CotizacionPolizasUsuario as List<SegurosAPI.Models.spCotizacion_polizasUsuarioDTO>;
+}
+
+<div class="container mt-4">
+	<!-- Título principal -->
+	<h2 class="text-center mb-4">Bienvenido <span class="text-primary">@usuario.Nombre</span></h2>
+
+	<!-- Formulario de cotización -->
+	<div class="card p-4 mb-4">
+		<h4 class="card-title mb-3">Realiza tu Cotización</h4>
+		<form id="cotizacionForm">
+			<div class="row g-3">
+				<div class="col-md-6">
+					<label for="nombreUsuario" class="form-label">Nombre del Usuario:</label>
+					<input type="text" id="nombreUsuario" name="nombreUsuario" class="form-control" value="@usuario.Nombre" readonly />
+				</div>
+				<div class="col-md-6">
+					<label for="tipoPoliza" class="form-label">Tipo de Póliza:</label>
+					<select id="tipoPoliza" name="tipoPoliza" class="form-select">
+						<option selected disabled>Seleccione tipo de Poliza</option>
+						@{
+							foreach (var item in tipoPolizas)
+							{
+								<option value="@item.TipoPolizaId">@item.Descripcion</option>
+							}
+						}
+					</select>
+				</div>
+			</div>
+			<div class="row g-3 mt-3">
+				<div class="col-md-6">
+					<label for="fechaAdquisicion" class="form-label">Fecha de Adquisición:</label>
+					<input type="date" id="fechaAdquisicion" name="fechaAdquisicion" class="form-control" value="@fechaHoy" />
+				</div>
+				<div class="col-md-6">
+					<label for="costo" class="form-label">Costo: $</label>
+					<input type="text" id="costo" name="costo" class="form-control" value="0" readonly />
+				</div>
+			</div>
+			<div class="row g-3 mt-3">
+				<div class="col-md-6">
+					<label for="estado" class="form-label">Estado:</label>
+					<input type="text" id="estado" name="estado" class="form-control" value="Cotización" readonly />
+				</div>
+			</div>
+			<div class="mt-4 text-end">
+				<button type="button" class="btn btn-success" onclick="realizarCotizacionv2()">Nueva Cotización</button>
+			</div>
+		</form>
+	</div>
+
+	<!-- Tabla de cotizaciones -->
+	<div class="card p-4">
+		<h4 class="card-title mb-3">Mis Cotizaciones</h4>
+		<table class="table table-striped table-hover">
+			<thead class="table-dark">
+				<tr>
+					<th>Número de Póliza</th>
+					<th>Tipo de Póliza</th>
+					<th>Fecha de Adquisición</th>
+					<th>Costo</th>
+					<th>Estado</th>
+					<th>Acción</th>
+				</tr>
+			</thead>
+			<tbody id="cotizacionesTable">
+				@foreach (var item in cotizaciones_usuario)
+				{
+					<tr>
+						<td>@item.Poliza_PolizaId</td>
+						<td>@item.TipoPoliza_Nombre</td>
+						<td>@item.FechaAdquisicion</td>
+						<td>@item.Costo.ToString("C")</td>
+						<td>@item.Poliza_Estado</td>
+						<td>
+							@if (item.Poliza_Estado == "Pendiente Pago")
+							{
+								<button class="btn btn-success btn-sm" onclick="pagarCotizacion('@item.Poliza_PolizaId')">Pagar</button>
+								<button class="btn btn-danger btn-sm" onclick="descartarCotizacion('@item.Poliza_PolizaId')">No Adquirir</button>
+							}
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>
+<script src="/js/gestionPolizaFunciones.js"></script>

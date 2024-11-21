@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <!-- Mensaje de bienvenida -->
+        <div class="text-center mb-4">
+            <p class="fs-5">
+                Bienvenido a nuestra plataforma <strong>SEGUROS J.D</strong>, por favor inicie sesión para poder realizar sus cotizaciones y adquirir nuestros servicios.
+            </p>
+        </div>
+
+        <!-- Botones de selección de formulario -->
+        <div class="d-flex justify-content-center flex-wrap gap-2 mb-4">
+            <button class="btn btn-primary" id="btnRegistro" onclick="mostrarFormulario('registro')">Registro</button>
+            <button class="btn btn-secondary" id="btnLogin" onclick="mostrarFormulario('login')">Iniciar Sesión</button>
+        </div>
+
+        <!-- Formulario de Registro -->
+        <div id="formRegistro" style="display: none;">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0">Registro</h4>
+                </div>
+                <div class="card-body">
+                    <form id="formRegistroUsuario">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" id="nombre" class="form-control" placeholder="Ingrese su nombre completo" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="correo" class="form-label">Correo</label>
+                            <input type="email" id="correo" class="form-control" placeholder="Ingrese su correo electrónico" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="contraseña" class="form-label">Contraseña</label>
+                            <input type="password" id="contraseña" class="form-control" placeholder="Ingrese una contraseña segura" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="rol" class="form-label">Rol</label>
+                            <select id="rol" class="form-select" required>
+                                <option value="" selected disabled>Seleccione Rol</option>
+                                <option value="Cliente">Cliente</option>
+                                <option value="Administrativo">Administrativo</option>
+                            </select>
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-success w-100" onclick="registrarUsuario()">Registrar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Formulario de Login -->
+        <div id="formLogin" style="display: none;">
+            <div class="card shadow-lg">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="card-title mb-0">Iniciar Sesión</h4>
+                </div>
+                <div class="card-body">
+                    <form id="formLoginUsuario">
+                        <div class="mb-3">
+                            <label for="correoLogin" class="form-label">Correo</label>
+                            <input type="email" id="correoLogin" class="form-control" placeholder="Ingrese su correo electrónico" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="contraseñaLogin" class="form-label">Contraseña</label>
+                            <input type="password" id="contraseñaLogin" class="form-control" placeholder="Ingrese su contraseña" required />
+                        </div>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary w-100" onclick="iniciarSesion()">Ingresar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/indexFunciones.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>
